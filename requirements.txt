@@ -1,0 +1,16 @@
+# Portfolio Risk Analyzer - Dependencies
+# These dependencies are compatible with Python 3.13
+# Install with: pip install -r requirements.txt
+
+# Web Dashboard Framework
+streamlit==1.39.0
+
+# Data Manipulation (newer version for Python 3.13)
+pandas==2.2.3
+numpy==2.1.3
+
+# Financial Data Source (Free API)
+yfinance==0.2.48
+
+# Interactive Visualizations
+plotly==5.24.1
