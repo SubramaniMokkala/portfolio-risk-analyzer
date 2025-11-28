@@ -1,4 +1,4 @@
-# Portfolio Risk Analyzer Web Interface using Streamlit
+# Portfolio Risk Analyzer Web Interface Using Streamlit
 
 import streamlit as st
 import pandas as pd
@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# custom css
 st.markdown("""
     <style>
     .main-header {
@@ -24,25 +24,13 @@ st.markdown("""
         font-weight: bold;
         color: #1f77b4;
     }
-    .metric-card {
-        background-color: #f0f2f6;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# Helper Functions
+# Helper functions
 
 def plot_stock_chart(data, ticker_symbol):
-    """
-    Create an interactive candlestick chart using Plotly
-    
-    Args:
-        data: DataFrame with OHLC data
-        ticker_symbol: Stock ticker symbol for title
-    """
+    """Create an interactive candlestick chart"""
     fig = go.Figure(data=[go.Candlestick(
         x=data.index,
         open=data['Open'],
@@ -65,34 +53,17 @@ def plot_stock_chart(data, ticker_symbol):
 
 
 def calculate_basic_metrics(data):
-    """
-    Calculate basic stock metrics
-    
-    Args:
-        data: DataFrame with stock data
-    
-    Returns:
-        dict: Dictionary of calculated metrics
-    """
+    """Calculate basic stock metrics"""
     metrics = {}
-    
-    # Current price (latest close)
     metrics['current_price'] = data['Close'].iloc[-1]
-    
-    # Price change
     metrics['price_change'] = data['Close'].iloc[-1] - data['Close'].iloc[0]
     metrics['price_change_pct'] = (metrics['price_change'] / data['Close'].iloc[0]) * 100
-    
-    # High and Low
     metrics['period_high'] = data['High'].max()
     metrics['period_low'] = data['Low'].min()
-    
-    # Average volume
     metrics['avg_volume'] = data['Volume'].mean()
-    
     return metrics
 
-# Main App
+# Main app
 
 def main():
     """Main application function"""
@@ -100,10 +71,9 @@ def main():
     # Header
     st.markdown('<h1 class="main-header">📊 Portfolio Risk Analyzer</h1>', unsafe_allow_html=True)
     st.markdown("### Analyze stocks with real-time data from Yahoo Finance")
-    
     st.markdown("---")
     
-    # Sidebar : User Inputs
+    # Side bar for user inputs
     st.sidebar.header("🔧 Configuration")
     
     # Stock ticker input
@@ -119,7 +89,6 @@ def main():
     col1, col2 = st.sidebar.columns(2)
     
     with col1:
-        # Default: 3 months ago
         default_start = datetime.now() - timedelta(days=90)
         start_date = st.date_input(
             "Start Date",
@@ -146,31 +115,7 @@ def main():
     - Date range: Up to 5 years of data
     """)
     
-    # Main Content Area
-    
-    # Shows instructions if no data is fetched yet
-    if 'stock_data' not in st.session_state:
-        st.info("""
-        👈 **Get Started:**
-        1. Enter a stock ticker symbol in the sidebar
-        2. Select your date range
-        3. Click "Fetch Data" to analyze
-        
-        **Popular Tickers to Try:**
-        - 🍎 AAPL (Apple)
-        - 🔍 GOOGL (Google)
-        - ⚡ TSLA (Tesla)
-        - 💼 MSFT (Microsoft)
-        - 🇮🇳 RELIANCE.NS (Reliance India)
-        """)
-        
-        # Example chart placeholder
-        st.markdown("### 📊 Your chart will appear here")
-        st.image("https://via.placeholder.com/800x400?text=Stock+Chart+Will+Appear+Here", use_container_width=True)
-        
-        return  # Stops here if no data
-    
-    # Fetch data logic
+    # Will fetch the data once button ic clicked
     
     if fetch_button:
         # Validate ticker first
@@ -178,7 +123,7 @@ def main():
             if not validate_ticker(ticker_input):
                 st.error(f"❌ Invalid ticker symbol: **{ticker_input}**")
                 st.info("💡 Make sure you're using the correct format (e.g., AAPL, GOOGL, RELIANCE.NS)")
-                return
+                st.stop()  # Use st.stop() instead of return
         
         # Fetch stock data
         with st.spinner(f"📡 Fetching data for {ticker_input}..."):
@@ -187,7 +132,7 @@ def main():
             if data is None or data.empty:
                 st.error(f"❌ No data found for {ticker_input} in the selected date range")
                 st.info("💡 Try a different date range or check the ticker symbol")
-                return
+                st.stop()
             
             # Store in session state
             st.session_state['stock_data'] = data
@@ -200,7 +145,7 @@ def main():
         
         st.success(f"✅ Successfully fetched {len(data)} days of data for **{ticker_input}**!")
     
-    # Display data (if available in session state)
+    # Display if data available
     
     if 'stock_data' in st.session_state:
         data = st.session_state['stock_data']
@@ -217,15 +162,14 @@ def main():
                 st.metric("Symbol", ticker)
             with col3:
                 if 'marketCap' in info:
-                    market_cap = info['marketCap'] / 1e9  # Convert to billions
+                    market_cap = info['marketCap'] / 1e9
                     st.metric("Market Cap", f"${market_cap:.2f}B")
         
         st.markdown("---")
         
-        # Calculate metrics
+        # Calculate and display metrics
         metrics = calculate_basic_metrics(data)
         
-        # Display metrics in columns
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
@@ -253,8 +197,6 @@ def main():
         
         # Data table
         st.subheader("📋 Raw Data")
-        
-        # Show last 10 rows by default
         show_all = st.checkbox("Show all data", value=False)
         
         if show_all:
@@ -271,8 +213,27 @@ def main():
             file_name=f"{ticker}_data_{start_date}_{end_date}.csv",
             mime="text/csv"
         )
+    
+    else:
+        # Show welcome message when no data is loaded
+        st.info("""
+        👈 **Get Started:**
+        1. Enter a stock ticker symbol in the sidebar
+        2. Select your date range
+        3. Click "Fetch Data" to analyze
+        
+        **Popular Tickers to Try:**
+        - 🍎 AAPL (Apple)
+        - 🔍 GOOGL (Google)
+        - ⚡ TSLA (Tesla)
+        - 💼 MSFT (Microsoft)
+        - 🇮🇳 RELIANCE.NS (Reliance India)
+        """)
+        
+        st.markdown("### 📊 Your chart will appear here")
+        st.image("https://via.placeholder.com/800x400?text=Stock+Chart+Will+Appear+Here", use_column_width=True)
 
 
-# run app
+# Run app
 if __name__ == "__main__":
     main()
