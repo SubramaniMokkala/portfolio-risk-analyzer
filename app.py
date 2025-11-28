@@ -217,16 +217,16 @@ def main():
     else:
         # Show welcome message when no data is loaded
         st.info("""
-        👈 **Get Started:**
+        **Get Started:**
         1. Enter a stock ticker symbol in the sidebar
         2. Select your date range
         3. Click "Fetch Data" to analyze
         
         **Popular Tickers to Try:**
-        - 🍎 AAPL (Apple)
-        - 🔍 GOOGL (Google)
-        - ⚡ TSLA (Tesla)
-        - 💼 MSFT (Microsoft)
+        - AAPL (Apple)
+        - GOOGL (Google)
+        - TSLA (Tesla)
+        - MSFT (Microsoft)
         - 🇮🇳 RELIANCE.NS (Reliance India)
         """)
         
