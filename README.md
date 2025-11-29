@@ -244,8 +244,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Subramani Mokkala**
 - GitHub: [@SubramaniMokkala](https://github.com/SubramaniMokkala)
-- LinkedIn: [www.linkedin.com/in/subramani-mokkala]
-- Email: [subramanimokkala@gmail.com]
+- LinkedIn: www.linkedin.com/in/subramani-mokkala
+- Email: subramanimokkala@gmail.com
 
 ---
 
